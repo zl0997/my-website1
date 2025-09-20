@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冯阿登纳 | 智链未来 · “链式”企业数字化转型汇报 (PDF-Optimized)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700;900&display=swap');
+        :root {
+            --bg-color: #020617;
+            --text-color: #E2E8F0;
+            --highlight-start: #A5B4FC;
+            --highlight-end: #93C5FD;
+            --card-bg: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.7));
+            --card-border: rgba(51, 65, 85, 0.8);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Noto Sans SC', sans-serif;
+            overscroll-behavior: none;
+        }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .slider-container { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; position: relative; z-index: 1; }
+        .slide {
+            height: 100vh; width: 100%;
+            scroll-snap-align: start;
+            display: flex; justify-content: center; align-items: center;
+            padding: 2rem 5rem; position: relative; overflow: hidden;
+        }
+        .animated-element {
+            opacity: 0; transform: translate3d(0, 50px, 0) scale(0.98); filter: blur(4px);
+            transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1), transform 1s cubic-bezier(0.19, 1, 0.22, 1), filter 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .visible .animated-element { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+        .delay-1{transition-delay:0.2s}.delay-2{transition-delay:0.4s}.delay-3{transition-delay:0.6s}.delay-4{transition-delay:0.8s}.delay-5{transition-delay:1.0s}.delay-6{transition-delay:1.2s}
+
+        .mega-title { font-size: 8rem; font-weight: 900; line-height: 1; font-family: 'Noto Sans SC', sans-serif; }
+        .section-title { font-size: 3.5rem; font-weight: 900; }
+        .text-glow { text-shadow: 0 0 25px rgba(165, 180, 252, 0.5), 0 0 50px rgba(147, 197, 253, 0.3); }
+        .text-highlight { background: linear-gradient(90deg, var(--highlight-start), var(--highlight-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 1.5rem; backdrop-filter: blur(16px);
+            position: relative; overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 1.5rem; border: 2px solid transparent;
+            background: conic-gradient(from var(--angle), var(--bg-color), #60A5FA, var(--bg-color) 25%, #A78BFA, var(--bg-color)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: rotate 5s linear infinite; opacity: 0; transition: opacity 0.4s;
+        }
+        @property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+        @keyframes rotate { to { --angle: 360deg; } }
+        .card:hover::before { opacity: 0.6; }
+
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 1.5rem 5rem; display: flex; justify-content: space-between; align-items: center; z-index: 10;
+        }
+
+        .title-char { display: inline-block; }
+        .flow-arrow {
+            position: relative; padding: 1rem 0; opacity: 0.7;
+        }
+        .flow-arrow .arrow-line { height: 2px; background: var(--highlight-end); width: 100%; transform-origin: left; transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1); transform: scaleX(0); }
+        .visible .arrow-line { transform: scaleX(1); }
+        .flow-arrow .arrow-head {
+            position: absolute; right: -1px; top: 50%;
+            transform: translateY(-50%) scale(0);
+            border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 12px solid var(--highlight-end);
+            transition: transform 0.5s 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .visible .arrow-head { transform: translateY(-50%) scale(1); }
+
+        /* --- PRINT OPTIMIZATION STYLES --- */
+        @media print {
+            html, body {
+                height: auto;
+                overflow: visible;
+                background-color: var(--bg-color); /* Ensure background prints */
+            }
+            .slider-container {
+                height: auto;
+                overflow: visible;
+                scroll-snap-type: none; /* Disable snap for print */
+            }
+            .slide {
+                height: 100vh; /* Each slide takes exactly one page */
+                page-break-after: always; /* CRITICAL: Force a new page after each slide */
+                padding: 2rem 4rem !important; /* Adjust padding for print */
+                overflow: hidden; /* Hide any overflow */
+            }
+            .slide:last-child {
+                page-break-after: avoid; /* Avoid extra blank page at the end */
+            }
+            #particle-canvas, .header, #scroll-down-indicator {
+                display: none !important; /* Hide non-essential elements */
+            }
+            .animated-element {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                transition: none !important;
+                animation: none !important;
+            }
+            .card, .card:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            .card::before {
+                display: none !important;
+            }
+            /* Ensure background colors and images print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<header class="header">
+    <div class="flex items-center">
+        <img src="https://www.vonardenne.com/typo3conf/ext/va_template/Resources/Public/Images/va-logo-claim-white-de.svg" alt="VON ARDENNE Logo" class="h-8 mr-4"/>
+        <span class="font-bold text-xl hidden md:block">| 智链未来</span>
+    </div>
+    <div id="slide-indicator" class="text-gray-400">1 / 10</div>
+</header>
+
+<div class="slider-container">
+
+    <!-- Slide 1: Mission -->
+    <section id="mission" class="slide text-center">
+        <div class="content-wrapper">
+            <h1 class="mega-title text-glow animated-element" id="main-title">
+                <span class="text-highlight">链主使命</span>
+            </h1>
+            <p class="text-3xl mt-4 text-gray-300 animated-element delay-1">CHAIN LEADER'S MISSION</p>
+            <p class="mt-8 text-xl max-w-3xl mx-auto text-gray-400 animated-element delay-2">
+                响应国家战略，以<span class="text-white font-bold">数字化</span>为引擎，驱动<span class="text-white font-bold">新质生产力</span>，重构产业链价值生态。
+            </p>
+            <div id="scroll-down-indicator" class="mt-16 text-gray-600 animated-element delay-3">
+                <i class="fas fa-chevron-down fa-2x animate-bounce"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: The Challenge -->
+    <section id="challenge" class="slide">
+        <div class="content-wrapper text-center">
+            <h2 class="section-title animated-element">产业链之痛：传统模式下的<span class="text-highlight">发展枷锁</span></h2>
+            <p class="text-xl text-gray-400 mt-4 animated-element delay-1">THE SHACKLES OF TRADITIONAL INDUSTRY MODELS</p>
+            <div class="mt-12 grid md:grid-cols-3 gap-8">
+                <div class="card p-8 animated-element delay-2">
+                    <i class="fas fa-silo text-6xl text-highlight mb-6"></i>
+                    <h3 class="text-2xl font-bold">数据迷雾 & 信息孤岛</h3>
+                    <p class="mt-4 text-gray-300">采购、生产、库存、物流数据全面割裂，导致供应链整体不透明，陷入“盲人摸象”困境。</p>
+                </div>
+                <div class="card p-8 animated-element delay-3">
+                    <i class="fas fa-users-slash text-6xl text-highlight mb-6"></i>
+                    <h3 class="text-2xl font-bold">协同低效 & 内卷竞争</h3>
+                    <p class="mt-4 text-gray-300">跨组织协作依赖低效的人工方式，流程断点丛生，同质化竞争严重，利润空间被不断挤压。</p>
+                </div>
+                <div class="card p-8 animated-element delay-4">
+                    <i class="fas fa-shield-virus text-6xl text-highlight mb-6"></i>
+                    <h3 class="text-2xl font-bold">风险脆弱 & 转型乏力</h3>
+                    <p class="mt-4 text-gray-300">供应链韧性不足，难以应对市场突变。中小企业面临资金、技术、人才三重瓶颈，数字化转型困难重重。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: The Architecture -->
+    <section id="architecture" class="slide">
+        <div class="content-wrapper">
+            <h2 class="section-title text-center animated-element">战略破局：<span class="text-highlight">双核心AI引擎</span>赋能全链</h2>
+            <div class="mt-8 grid md:grid-cols-2 gap-8 items-stretch">
+                <div class="card p-8 flex flex-col justify-between animated-element delay-1">
+                    <div>
+                        <h3 class="text-3xl font-bold"><i class="fas fa-database text-highlight"></i> 内部数据中台 (数据心脉)</h3>
+                        <p class="mt-4 text-gray-300">汇聚SAP、PLM等核心系统数据，沉淀为“数据资产”。通过大数据与AI分析，<span class="text-white">“内生”</span>出业务洞察与决策智慧。</p>
+                    </div>
+                    <div class="mt-6">
+                        <p class="font-bold text-highlight">链式价值：</p>
+                        <p class="text-sm text-gray-300">精准预测供应链瓶颈、发现质量问题根源、优化全链资源配置。</p>
+                    </div>
+                </div>
+                <div class="card p-8 flex flex-col justify-between animated-element delay-2">
+                    <div>
+                        <h3 class="text-3xl font-bold"><i class="fas fa-cloud-meatball text-highlight"></i> 外部数字底座 (敏捷外壳)</h3>
+                        <p class="mt-4 text-gray-300">通过加密安全链路，连接外部生态。将内部智慧<span class="text-white">“外联”</span>赋能于全链业务场景。</p>
+                    </div>
+                    <div class="mt-6">
+                        <p class="font-bold text-highlight">链式价值：</p>
+                        <p class="text-sm text-gray-300">向伙伴提供智能预警、共享需求预测、自动化协同流程、快速集成SaaS应用。</p>
+                    </div>
+                </div>
+            </div>
+             <div class="text-center mt-8 card p-6 max-w-2xl mx-auto animated-element delay-3">
+                <h3 class="text-2xl font-bold"><i class="fas fa-shield-alt text-highlight mr-2"></i>安全总纲：零信任架构 (Zero-Trust)</h3>
+                <p class="text-gray-300">确保开放协作与核心数据安全之间的完美平衡。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Slide 4: Digital Collaboration Blueprint -->
+    <section id="blueprint" class="slide">
+        <div class="content-wrapper">
+            <h2 class="section-title text-center animated-element">数字化协作蓝图：<span class="text-highlight">构建无界组织</span></h2>
+            <div class="mt-10 grid grid-cols-3 items-center gap-4">
+                <!-- Upstream -->
+                <div class="text-center flex flex-col h-full animated-element delay-1">
+                    <h3 class="text-2xl font-bold mb-4">深度协同：上游核心伙伴</h3>
+                    <div class="card p-6 space-y-3 flex-grow">
+                        <p class="text-left"><i class="fas fa-receipt text-highlight w-6 text-center mr-2"></i>实时获取采购订单 (SAP MM)</p>
+                        <p class="text-left"><i class="fas fa-cogs text-highlight w-6 text-center mr-2"></i>共享BOM数据 (PLM)</p>
+                        <p class="text-left"><i class="fas fa-check-circle text-highlight w-6 text-center mr-2"></i>在线提交质量检验批 (SAP QM)</p>
+                        <p class="text-left"><i class="fas fa-file-invoice-dollar text-highlight w-6 text-center mr-2"></i>透明化供应商付款信息 (SAP FI)</p>
+                    </div>
+                    <div class="card p-4 mt-4">
+                        <h4 class="font-bold text-highlight">超越数据：能力共建</h4>
+                        <p class="text-sm text-gray-300">协助镇江德利克等伙伴实施ERP，输出数字化转型方案</p>
+                    </div>
+                </div>
+                <!-- VAVE Hub -->
+                <div class="text-center">
+                    <div class="flow-arrow animated-element delay-2"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+                    <div class="card p-6 animated-element delay-3">
+                        <img src="https://www.vonardenne.com/typo3conf/ext/va_template/Resources/Public/Images/va-logo-claim-white-de.svg" alt="VON ARDENNE Logo" class="h-12 mx-auto"/>
+                        <p class="font-bold mt-2">数字协作平台</p>
+                        <p class="text-sm text-gray-400">统一入口 · 流程自动化 · 安全可信</p>
+                    </div>
+                    <div class="flow-arrow animated-element delay-4"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+                </div>
+                <!-- Downstream -->
+                <div class="text-center flex flex-col h-full animated-element delay-5">
+                    <h3 class="text-2xl font-bold mb-4">极致透明：下游客户体验</h3>
+                    <div class="card p-6 space-y-3 flex-grow">
+                        <p class="text-left"><i class="fas fa-tasks text-highlight w-6 text-center mr-2"></i>实时跟踪订单状态</p>
+                        <p class="text-left"><i class="fas fa-industry text-highlight w-6 text-center mr-2"></i>可视生产进度 (SAP PP)</p>
+                        <p class="text-left"><i class="fas fa-truck text-highlight w-6 text-center mr-2"></i>透明发货单清单 (SAP SD)</p>
+                        <p class="text-left"><i class="fas fa-clock text-highlight w-6 text-center mr-2"></i>集成现场服务工时小程序</p>
+                    </div>
+                    <div class="card p-4 mt-4">
+                        <h4 class="font-bold text-highlight">超越交易：价值共创</h4>
+                        <p class="text-sm text-gray-300">从单一设备供应商，升级为全生命周期价值伙伴</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Chain Ecosystem -->
+    <section id="ecosystem" class="slide">
+        <div class="content-wrapper text-center">
+            <h2 class="section-title animated-element">构建多维价值生态：<span class="text-highlight">超越传统供应链</span></h2>
+            <div class="mt-8 relative h-[600px] w-full flex items-center justify-center">
+                <!-- Center Hub -->
+                <div class="absolute z-10 w-52 h-52 rounded-full flex flex-col items-center justify-center text-center p-4 animated-element">
+                    <div class="w-full h-full rounded-full border-2 border-blue-400 bg-blue-900/50 flex items-center justify-center">
+                       <img src="https://www.vonardenne.com/typo3conf/ext/va_template/Resources/Public/Images/va-logo-claim-white-de.svg" alt="VON ARDENNE Logo" class="w-32"/>
+                    </div>
+                </div>
+                <!-- Orbiting Nodes -->
+                <div class="absolute w-[600px] h-[600px] border-2 border-dashed border-gray-700 rounded-full animate-spin" style="animation-duration: 60s;"></div>
+                <div class="absolute w-[400px] h-[400px] border border-dashed border-gray-700 rounded-full animate-spin" style="animation-duration: 40s;"></div>
+
+                <div class="card p-4 absolute w-64 text-center animated-element delay-1" style="top: 0; left: 50%; transform: translateX(-50%);">
+                    <i class="fas fa-link text-3xl text-highlight mb-2"></i><h3 class="text-lg font-bold">供应链协同</h3><p class="text-xs text-gray-400">JIT交付 / 质量共管</p>
+                </div>
+                <div class="card p-4 absolute w-64 text-center animated-element delay-2" style="top: 50%; right: 0; transform: translateY(-50%);">
+                    <i class="fas fa-globe text-3xl text-highlight mb-2"></i><h3 class="text-lg font-bold">平台赋能</h3><p class="text-xs text-gray-400">SaaS / 数字商城</p>
+                </div>
+                <div class="card p-4 absolute w-64 text-center animated-element delay-3" style="bottom: 0; left: 50%; transform: translateX(-50%);">
+                     <i class="fas fa-hand-holding-usd text-3xl text-highlight mb-2"></i><h3 class="text-lg font-bold">供应链金融</h3><p class="text-xs text-gray-400">解决融资难题</p>
+                </div>
+                <div class="card p-4 absolute w-64 text-center animated-element delay-4" style="top: 50%; left: 0; transform: translateY(-50%);">
+                    <i class="fas fa-leaf text-3xl text-highlight mb-2"></i><h3 class="text-lg font-bold">绿色低碳</h3><p class="text-xs text-gray-400">智能物流 / 降碳足迹</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Digital Mall -->
+    <section id="mall" class="slide">
+        <div class="content-wrapper">
+            <h2 class="section-title text-center animated-element">战略项目：<span class="text-highlight">全球数字商城</span></h2>
+            <p class="text-center mt-4 text-xl text-gray-400 animated-element delay-1">携手供应商伙伴，共拓全球市场</p>
+            <div class="mt-12 grid md:grid-cols-2 gap-12 items-center">
+                <div class="animated-element delay-2">
+                    <h3 class="text-3xl font-bold">构建产业出海新通路</h3>
+                    <p class="text-gray-300 mt-4">打破地域限制，整合国内优质供应商资源，通过统一的数字化平台，将中国真空镀膜设备领域的优质产品和服务推向全球。</p>
+                    <ul class="mt-6 space-y-3">
+                        <li class="flex items-center"><i class="fas fa-boxes text-xl text-highlight mr-4"></i><span>导入<span class="font-bold text-white">10个品类5000个SKU</span>商品</span></li>
+                        <li class="flex items-center"><i class="fas fa-globe-americas text-xl text-highlight mr-4"></i><span>实现订单、库存、<span class="font-bold text-white">全球物流</span>信息实时流转</span></li>
+                        <li class="flex items-center"><i class="fas fa-users text-xl text-highlight mr-4"></i><span>构建社区生态，链通消费者、供应商与金融机构</span></li>
+                    </ul>
+                </div>
+                <div class="animated-element delay-3">
+                    <div class="card p-8">
+                        <div class="aspect-w-16 aspect-h-9 bg-slate-800 rounded-lg p-4">
+                           <div class="flex items-center border-b border-gray-600 pb-2">
+                               <span class="w-3 h-3 bg-red-500 rounded-full"></span><span class="w-3 h-3 bg-yellow-500 rounded-full ml-2"></span><span class="w-3 h-3 bg-green-500 rounded-full ml-2"></span>
+                           </div>
+                           <div class="mt-4 text-center">
+                               <i class="fas fa-shopping-cart text-6xl text-gray-500"></i>
+                               <p class="mt-4 font-bold text-2xl">VON ARDENNE GLOBAL MALL</p>
+                               <div class="mt-6">
+                                   <p class="text-5xl font-black text-highlight">690<span class="text-3xl">万€</span></p>
+                                   <p class="text-gray-400">3年内平台年交易额目标</p>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Data Governance -->
+    <section id="governance" class="slide">
+        <div class="content-wrapper">
+            <h2 class="section-title text-center animated-element">数据治理：从<span class="text-highlight">数据</span>到可信的<span class="text-highlight">数字资产</span></h2>
+            <p class="text-center mt-4 text-xl text-gray-400 animated-element delay-1">确保每一比特数据都安全、合规、可信。</p>
+            <div class="mt-12 grid md:grid-cols-3 gap-8 text-center">
+                <div class="animated-element delay-2">
+                    <div class="card p-6 h-full">
+                        <i class="fas fa-layer-group text-6xl text-highlight mb-4"></i>
+                        <h3 class="text-2xl font-bold">数据分类分级</h3>
+                        <p class="mt-2 text-gray-300">建立<span class="text-white">L1-L4四级标准</span>，对PLM图纸、SAP核心工艺等敏感数据进行最高级别保护。</p>
+                    </div>
+                </div>
+                <div class="animated-element delay-3">
+                    <div class="card p-6 h-full">
+                        <i class="fas fa-lock text-6xl text-highlight mb-4"></i>
+                        <h3 class="text-2xl font-bold">全生命周期加密与脱敏</h3>
+                        <p class="mt-2 text-gray-300">数据在产生、传输、存储、使用全过程加密。采用<span class="text-white">动/静态脱敏</span>技术，防止数据泄露与模型投毒。</p>
+                    </div>
+                </div>
+                <div class="animated-element delay-4">
+                     <div class="card p-6 h-full">
+                        <i class="fas fa-check-double text-6xl text-highlight mb-4"></i>
+                        <h3 class="text-2xl font-bold">统一数据标准与质量</h3>
+                        <p class="mt-2 text-gray-300">建立<span class="text-white">企业级数据目录</span>与元数据管理，确保跨系统数据的一致性与可信度，为AI应用奠定坚实基础。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Quantifiable Outcomes -->
+    <section id="outcomes" class="slide">
+        <div class="content-wrapper">
+            <h2 class="section-title text-center animated-element">价值金字塔：可验证的<span class="text-highlight">成果跃迁</span></h2>
+            <div class="mt-12 flex flex-col items-center justify-center gap-4">
+                <div class="pyramid-level animated-element delay-4">
+                    <div class="card p-6 w-[30rem] text-center">
+                        <h3 class="text-2xl font-bold"><i class="fas fa-shield-alt text-highlight mr-2"></i>产业韧性与创新</h3>
+                        <p class="text-gray-300">供应链集中度降低，抗风险能力增强，孵化新产品/方案 > 5个</p>
+                    </div>
+                </div>
+                <div class="pyramid-level flex gap-4 animated-element delay-2">
+                    <div class="card p-6 w-[25rem] text-center">
+                        <h3 class="text-2xl font-bold">质量与敏捷性</h3>
+                        <div class="flex justify-around mt-4">
+                            <div><p class="text-4xl font-black text-highlight">>65%</p><p>订单延误率降低</p></div>
+                            <div><p class="text-4xl font-black text-highlight">>25%</p><p>产品不良率降低</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pyramid-level flex gap-4 animated-element">
+                    <div class="card p-6 w-[40rem] text-center">
+                        <h3 class="text-2xl font-bold">核心效率基石</h3>
+                        <div class="flex justify-around mt-4">
+                            <div><p class="text-4xl font-black text-highlight">>30%</p><p>生产效率提升</p></div>
+                            <div><p class="text-4xl font-black text-highlight">10-15%</p><p>运营成本降低</p></div>
+                             <div><p class="text-4xl font-black text-highlight">>20%</p><p>研发周期缩短</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: Roadmap -->
+    <section id="roadmap" class="slide">
+        <div class="content-wrapper">
+             <h2 class="section-title text-center animated-element">实施路线图：从<span class="text-highlight">平台</span>到<span class="text-highlight">生态</span>的稳步演进</h2>
+             <div class="mt-16 relative">
+                 <div class="absolute left-0 right-0 top-5 h-1 bg-gray-700"></div>
+                 <div class="grid md:grid-cols-3 gap-16 text-center relative">
+                     <div class="absolute left-1/3 top-5 w-1 h-20 bg-gray-700"></div>
+                     <div class="absolute right-1/3 top-5 w-1 h-20 bg-gray-700"></div>
+                     
+                     <div class="animated-element delay-1">
+                         <div class="w-10 h-10 rounded-full bg-highlight mx-auto mb-4 border-4 border-slate-900"></div>
+                         <h3 class="text-2xl font-bold">第一阶段: 平台建设与准备</h3>
+                         <p class="text-lg text-gray-400">6-12个月</p>
+                         <p class="mt-4 text-gray-300 card p-4">搭建技术底座，构建“安全链路”，初步集成SAP、SRM核心数据，验证模式可行性。</p>
+                     </div>
+                      <div class="animated-element delay-2">
+                         <div class="w-10 h-10 rounded-full bg-highlight mx-auto mb-4 border-4 border-slate-900"></div>
+                         <h3 class="text-2xl font-bold">第二阶段: 治理与推广</h3>
+                         <p class="text-lg text-gray-400">18-24个月</p>
+                         <p class="mt-4 text-gray-300 card p-4">建立数据治理体系，将数据资产化，向更多伙伴推广，形成规模效应，同步建设人才梯队。</p>
+                     </div>
+                      <div class="animated-element delay-3">
+                         <div class="w-10 h-10 rounded-full bg-highlight mx-auto mb-4 border-4 border-slate-900"></div>
+                         <h3 class="text-2xl font-bold">第三阶段: 服务与生态</h3>
+                         <p class="text-lg text-gray-400">长期持续</p>
+                         <p class="mt-4 text-gray-300 card p-4">深化数据服务化(API)，集成AI、区块链，探索数据资产化与交易，构建开放共赢的产业新生态。</p>
+                     </div>
+                 </div>
+             </div>
+        </div>
+    </section>
+    
+    <!-- Slide 10: Contact -->
+    <section id="contact" class="slide text-center">
+        <div class="content-wrapper">
+            <img src="https://www.vonardenne.com/typo3conf/ext/va_template/Resources/Public/Images/va-logo-claim-white-de.svg" alt="VON ARDENNE Logo" class="h-20 mx-auto animated-element"/>
+            <h2 class="mega-title text-glow animated-element delay-1">智链<span class="text-highlight">未来</span></h2>
+            <p class="section-title text-gray-300 animated-element delay-2">JOIN US TO SHAPE THE FUTURE</p>
+            <p class="mt-8 text-xl max-w-2xl mx-auto text-gray-400 animated-element delay-3">
+                冯阿登纳期待与您携手，共塑新质生产力，打造世界一流的高端装备制造产业集群。
+            </p>
+            <a href="#" id="downloadBtn" class="mt-12 inline-block text-slate-900 font-bold py-4 px-10 rounded-full text-xl animated-element delay-4" style="background: linear-gradient(90deg, var(--highlight-start), var(--highlight-end)); transition: all 0.3s ease; transform: scale(1);">
+                <i class="fas fa-download mr-3"></i> 下载完整汇报方案
+            </a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Animate Title ---
+        const title = document.getElementById('main-title');
+        const text = title.innerHTML;
+        title.innerHTML = '';
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            span.className = 'title-char animated-element';
+            span.style.transitionDelay = `${index * 0.05}s`;
+            span.innerHTML = char === ' ' ? '&nbsp;' : char;
+            title.appendChild(span);
+        });
+
+        // --- Intersection Observer for Animations ---
+        const slides = document.querySelectorAll('.slide');
+        const indicator = document.getElementById('slide-indicator');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const slideIndex = Array.from(slides).indexOf(entry.target) + 1;
+                    indicator.textContent = `${slideIndex} / ${slides.length}`;
+                }
+            });
+        }, { threshold: 0.5 });
+        slides.forEach(section => { observer.observe(section); });
+
+        // --- Particle Background ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 1.5
+            });
+        }
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(165, 180, 252, 0.5)';
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // --- Download Button ---
+        document.getElementById('downloadBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('这是一个演示页面。请根据页面内容和结构，使用PowerPoint或类似工具制作您的汇报PPT。');
+        });
+    });
+</script>
+
+</body>
+</html>```
